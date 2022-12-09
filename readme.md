@@ -20,7 +20,7 @@ func main() {
 }
 ```
 
-如何用wire来生成上述代码？核心在于下述的UpdateB函数，通过B生成B自己，但是将interface赋值了。
+如何用[wire依赖注入工具](https://github.com/google/wire)来生成上述代码？核心在于下述的UpdateB函数，通过B生成B自己，但是将interface赋值了。
 ```go
 type PackageB2 package_b.PackageB
 
