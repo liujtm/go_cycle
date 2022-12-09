@@ -1,6 +1,6 @@
 使用wire工具遇到循环引用怎么办？
 
-A和B互相依赖对方，可以抽出一层公共的interface，示例代码如下：
+A和B互相依赖对方，可以抽出一层公共的interface(参考 [golang包循环引用的几种解决方案](https://libuba.com/2020/11/02/golang%E5%8C%85%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E7%9A%84%E5%87%A0%E7%A7%8D%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/))，示例代码如下：
 
 ```go
 package main
