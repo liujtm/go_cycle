@@ -27,7 +27,9 @@ func InitializeApplication() (*application, error) {
 
 // wire.go:
 
-type PackageB2 package_b.PackageB
+type PackageB2 struct {
+	*package_b.PackageB
+}
 
 type application struct {
 	A *package_a.PackageA
@@ -46,5 +48,5 @@ func NewB() *package_b.PackageB {
 
 func UpdateB(b *package_b.PackageB, i package_i.PackageAInterface) *PackageB2 {
 	b.A = i
-	return (*PackageB2)(b)
+	return &PackageB2{b}
 }
