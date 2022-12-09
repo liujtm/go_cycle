@@ -2,7 +2,7 @@
 
 A和B互相依赖对方，可以抽出一层公共的interface，示例代码如下：
 
-```
+```go
 package main
  
 import (
@@ -21,7 +21,7 @@ func main() {
 ```
 
 如何用wire来生成上述代码？核心在于下述的UpdateB函数，通过B生成B自己，但是将interface赋值了。
-```
+```go
 type PackageB2 package_b.PackageB
 
 type application struct {
