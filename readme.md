@@ -13,14 +13,14 @@ import (
 func main() {
 	a := new(package_a.PackageA)
 	b := new(package_b.PackageB)
-    a.B = b
-    b.A = a
+	a.B = b
+	b.A = a
 	a.PrintAll()
 	b.PrintAll()
 }
 ```
 
-如何用wire来生成上述代码？核心在于下述的UpdateB函数，通过B生成B自己，但是将interface示例化了。
+如何用wire来生成上述代码？核心在于下述的UpdateB函数，通过B生成B自己，但是将interface赋值了。
 ```
 type PackageB2 package_b.PackageB
 
