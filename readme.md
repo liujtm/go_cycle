@@ -22,6 +22,7 @@ func main() {
 
 如何用[wire依赖注入工具](https://github.com/google/wire)来生成上述代码？核心在于下述的UpdateB函数，通过B生成B自己，但是将interface赋值了。
 ```go
+// 匿名字段，PackageB2继承了PackageB的全部方法
 type PackageB2 struct {
 	*package_b.PackageB
 }

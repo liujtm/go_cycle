@@ -27,6 +27,7 @@ func InitializeApplication() (*application, error) {
 
 // wire.go:
 
+// 匿名字段，PackageB2继承了PackageB的全部方法
 type PackageB2 struct {
 	*package_b.PackageB
 }
