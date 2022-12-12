@@ -20,44 +20,24 @@ func main() {
 }
 ```
 
-如何用[wire依赖注入工具](https://github.com/google/wire)来生成上述代码？核心在于下述的UpdateB函数，通过B生成B自己，但是将interface赋值了。
+如何用[wire依赖注入工具](https://github.com/google/wire)来生成上述代码？核心在于下述的UpdateA函数，通过A生成A自己，但是将interface赋值了。
 ```go
-// 匿名字段，PackageB2继承了PackageB的全部方法
-type PackageB2 struct {
-	*package_b.PackageB
+func NewA() *PackageAInner {
+	return &PackageAInner{}
 }
 
-type application struct {
-	A *package_a.PackageA
-	B *PackageB2
+func UpdateA(a *PackageAInner, b package_i.PackageBInterface) *PackageA {
+	a.B = b
+	return &PackageA{a}
 }
 
-func NewA(i package_i.PackageBInterface) *package_a.PackageA {
-	a := new(package_a.PackageA)
-	a.B = i
-	return a
+// 匿名字段，PackageA 继承了 PackageAInner 的全部方法
+type PackageA struct {
+	*PackageAInner
 }
 
-func NewB() *package_b.PackageB {
-	return new(package_b.PackageB)
-}
-
-func UpdateB(b *package_b.PackageB, i package_i.PackageAInterface) *PackageB2 {
-	b.A = i
-	return &PackageB2{b}
-}
-
-func InitializeApplication() (*application, error) {
-	wire.Build(wire.NewSet(
-		wire.Bind(new(package_i.PackageBInterface), new(*package_b.PackageB)),
-		wire.Bind(new(package_i.PackageAInterface), new(*package_a.PackageA)),
-		NewA,
-		NewB,
-		UpdateB,
-		wire.Struct(new(application), "*"),
-	),
-	)
-	return &application{}, nil
+type PackageAInner struct {
+	B package_i.PackageBInterface
 }
 ```
 
