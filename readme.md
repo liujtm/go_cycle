@@ -41,3 +41,16 @@ type PackageAInner struct {
 }
 ```
 
+每个package有 PackageAInner 和 PackageA 两个版本；PackageAInner 给 package_i.PackageAInterface 绑定；PackageA 给自己的schema层绑定；
+```go
+var ASchemaSet = wire.NewSet(
+	// 下面4行为了生成 ASchema， 但还缺少一个 PackageBInterface 的实现
+	impl.NewA,
+	impl.UpdateA,
+	schema.NewSchema,
+	wire.Bind(new(service.AInterface), new(*impl.PackageA)), // 为schema绑定interface实现
+
+	// 为生成B时，提供 PackageAInterface 的实现
+	wire.Bind(new(package_i.PackageAInterface), new(*impl.PackageAInner)),
+)
+```
