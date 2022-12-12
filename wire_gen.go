@@ -7,47 +7,31 @@
 package main
 
 import (
-	"aaa/package_a"
-	"aaa/package_b"
-	"aaa/package_i"
+	"aaa/package_a/schema"
+	"aaa/package_a/service/impl"
+	schema2 "aaa/package_b/schema"
+	impl2 "aaa/package_b/service/impl"
 )
 
 // Injectors from wire.go:
 
 func InitializeApplication() (*application, error) {
-	packageB := NewB()
-	packageA := NewA(packageB)
-	packageB2 := UpdateB(packageB, packageA)
+	packageAInner := impl.NewA()
+	packageBInner := impl2.NewB()
+	packageA := impl.UpdateA(packageAInner, packageBInner)
+	aSchema := schema.NewSchema(packageA)
+	packageB := impl2.UpdateB(packageBInner, packageAInner)
+	bSchema := schema2.NewSchema(packageB)
 	mainApplication := &application{
-		A: packageA,
-		B: packageB2,
+		A: aSchema,
+		B: bSchema,
 	}
 	return mainApplication, nil
 }
 
 // wire.go:
 
-// 匿名字段，PackageB2继承了PackageB的全部方法
-type PackageB2 struct {
-	*package_b.PackageB
-}
-
 type application struct {
-	A *package_a.PackageA
-	B *PackageB2
-}
-
-func NewA(i package_i.PackageBInterface) *package_a.PackageA {
-	a := new(package_a.PackageA)
-	a.B = i
-	return a
-}
-
-func NewB() *package_b.PackageB {
-	return new(package_b.PackageB)
-}
-
-func UpdateB(b *package_b.PackageB, i package_i.PackageAInterface) *PackageB2 {
-	b.A = i
-	return &PackageB2{b}
+	A *schema.ASchema
+	B *schema2.BSchema
 }
