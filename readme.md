@@ -38,7 +38,7 @@ type PackageA struct {
 	*PackageAMiddle
 }
 
-// PackageAMiddle，中间产物，NewA()生成，但 PackageBInterface 未绑定实现
+// PackageAMiddle，中间产物(半成品)，NewA()生成，但 PackageBInterface 未绑定实现
 type PackageAMiddle struct {
 	B package_i.PackageBInterface
 }
@@ -56,4 +56,23 @@ var ASchemaSet = wire.NewSet(
 	// 为生成B时，提供 PackageAInterface 的实现
 	wire.Bind(new(package_i.PackageAInterface), new(*impl.PackageAMiddle)),
 )
+```
+最终生成的 wire_gen.go 如下
+```go
+func InitializeApplication() (*application, error) {
+	packageAMiddle := impl.NewA()  // A的半成品、中间产物
+	packageBMiddle := impl2.NewB() // B的半成品、中间产物
+
+	packageA := impl.UpdateA(packageAMiddle, packageBMiddle) // 最终可用的A
+	aSchema := schema.NewSchema(packageA) // 给schema层使用
+
+	packageB := impl2.UpdateB(packageBMiddle, packageAMiddle) // 最终可用的B
+	bSchema := schema2.NewSchema(packageB) // 给schema层使用
+
+	mainApplication := &application{
+		A: aSchema,
+		B: bSchema,
+	}
+	return mainApplication, nil
+}
 ```

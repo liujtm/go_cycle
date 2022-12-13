@@ -21,7 +21,7 @@ type PackageA struct {
 	*PackageAMiddle
 }
 
-// PackageAMiddle，中间产物，NewA()生成，但 PackageBInterface 未绑定实现
+// PackageAMiddle，中间产物(半成品)，NewA()生成，但 PackageBInterface 未绑定实现
 type PackageAMiddle struct {
 	B package_i.PackageBInterface
 }
