@@ -16,11 +16,11 @@ import (
 // Injectors from wire.go:
 
 func InitializeApplication() (*application, error) {
-	packageAInner := impl.NewA()
-	packageBInner := impl2.NewB()
-	packageA := impl.UpdateA(packageAInner, packageBInner)
+	packageAMiddle := impl.NewA()
+	packageBMiddle := impl2.NewB()
+	packageA := impl.UpdateA(packageAMiddle, packageBMiddle)
 	aSchema := schema.NewSchema(packageA)
-	packageB := impl2.UpdateB(packageBInner, packageAInner)
+	packageB := impl2.UpdateB(packageBMiddle, packageAMiddle)
 	bSchema := schema2.NewSchema(packageB)
 	mainApplication := &application{
 		A: aSchema,

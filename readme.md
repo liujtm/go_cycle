@@ -22,26 +22,29 @@ func main() {
 
 如何用[wire依赖注入工具](https://github.com/google/wire)来生成上述代码？核心在于下述的UpdateA函数，通过A生成A自己，但是将interface赋值了。
 ```go
-func NewA() *PackageAInner {
-	return &PackageAInner{}
+// 生成中间产物 PackageAMiddle
+func NewA() *PackageAMiddle {
+	return &PackageAMiddle{}
 }
 
-func UpdateA(a *PackageAInner, b package_i.PackageBInterface) *PackageA {
+// 通过中间产物 PackageAMiddle 和 package B 绑定的实现， 生成最终的 PackageA
+func UpdateA(a *PackageAMiddle, b package_i.PackageBInterface) *PackageA {
 	a.B = b
 	return &PackageA{a}
 }
 
-// 匿名字段，PackageA 继承了 PackageAInner 的全部方法
+// 匿名字段，PackageA 继承了 PackageAMiddle 的全部方法
 type PackageA struct {
-	*PackageAInner
+	*PackageAMiddle
 }
 
-type PackageAInner struct {
+// PackageAMiddle，中间产物，NewA()生成，但 PackageBInterface 未绑定实现
+type PackageAMiddle struct {
 	B package_i.PackageBInterface
 }
 ```
 
-每个package有 PackageAInner 和 PackageA 两个版本；PackageAInner 给 package_i.PackageAInterface 绑定；PackageA 给自己的schema层绑定；
+每个package有 PackageAMiddle 和 PackageA 两个版本；PackageAMiddle 给 package_i.PackageAInterface 绑定；PackageA 给自己的schema层绑定；
 ```go
 var ASchemaSet = wire.NewSet(
 	// 下面4行为了生成 ASchema， 但还缺少一个 PackageBInterface 的实现
@@ -51,6 +54,6 @@ var ASchemaSet = wire.NewSet(
 	wire.Bind(new(service.AInterface), new(*impl.PackageA)), // 为schema绑定interface实现
 
 	// 为生成B时，提供 PackageAInterface 的实现
-	wire.Bind(new(package_i.PackageAInterface), new(*impl.PackageAInner)),
+	wire.Bind(new(package_i.PackageAInterface), new(*impl.PackageAMiddle)),
 )
 ```

@@ -5,28 +5,28 @@ import (
 	"fmt"
 )
 
-func NewB() *PackageBInner {
-	return &PackageBInner{}
+func NewB() *PackageBMiddle {
+	return &PackageBMiddle{}
 }
 
-func UpdateB(b *PackageBInner, a package_i.PackageAInterface) *PackageB {
+func UpdateB(b *PackageBMiddle, a package_i.PackageAInterface) *PackageB {
 	b.A = a
 	return &PackageB{b}
 }
 
 type PackageB struct {
-	*PackageBInner
+	*PackageBMiddle
 }
 
-type PackageBInner struct {
+type PackageBMiddle struct {
 	A package_i.PackageAInterface
 }
 
-func (b *PackageBInner) PrintB() {
+func (b *PackageBMiddle) PrintB() {
 	fmt.Println("I'm b!")
 }
 
-func (b *PackageBInner) PrintAll() {
+func (b *PackageBMiddle) PrintAll() {
 	fmt.Println("I'm PrintAll from b!")
 	b.PrintB()
 	b.A.PrintA()

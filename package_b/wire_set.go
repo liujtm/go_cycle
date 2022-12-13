@@ -17,5 +17,5 @@ var BSchemaSet = wire.NewSet(
 	wire.Bind(new(service.BInterface), new(*impl.PackageB)), // 为schema绑定interface实现
 
 	// 为生成A时，提供 PackageBInterface 的实现
-	wire.Bind(new(package_i.PackageBInterface), new(*impl.PackageBInner)),
+	wire.Bind(new(package_i.PackageBInterface), new(*impl.PackageBMiddle)),
 )
